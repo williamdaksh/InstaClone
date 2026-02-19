@@ -18,9 +18,6 @@ const postSchema = new mongoose.Schema({
     },
     imgUrl:{
         type:String,
-    },
-    like:{
-        type:Number
     }
 })
 

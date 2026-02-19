@@ -10,26 +10,6 @@ const imagekit = new ImageKit({
 async function createPost(req, res) {
   // console.log(req.body,req.file);
 
-  const token = req.cookie.token;
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Token not provided, Unauthorized access",
-    });
-  }
-
-  let decode = null;
-
-  try {
-    decode = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "user not authorized",
-    });
-  }
-
-  console.log(decode);
-
   try {
     const file = await imagekit.files.upload({
       file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -43,7 +23,7 @@ async function createPost(req, res) {
     const post = await postModel.create({
       imgUrl: file.url,
       caption: req.body.caption,
-      user: decode.id,
+      user: req.user.id,
     });
 
     res.status(201).json({
@@ -56,25 +36,9 @@ async function createPost(req, res) {
 }
 
 async function getPostImage(req, res) {
-  const token = req.cookie.token;
 
-  if (!token) {
-    return res.status(401).json({
-      message: "token not found , unautherazi axis",
-    });
-  }
 
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "Token invalid",
-    });
-  }
-
-  const userId = decoded.id;
+  const userId = req.user.id;
 
   const post = await postModel.find({
     user: userId,
@@ -87,25 +51,8 @@ async function getPostImage(req, res) {
 }
 
 async function getPostDetail(req, res) {
-  const token = req.cookie.token;
 
-  if (!token) {
-    return res.status(401).json({
-      message: "token not found",
-    });
-  }
-
-  let decoded;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "Invalid token",
-    });
-  }
-
-  const userId = decoded.id;
+  const userId = req.user.id;
   const postId = req.params.postId;
 
   const post = await postModel.findById({ postId });
