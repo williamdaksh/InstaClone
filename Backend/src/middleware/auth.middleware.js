@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken')
 
 function identityVerify(req,res,next){
 
-    const token = req.cookie.token;
+    const token = req.cookies.token;
 
     if(!token){
         return res.status(401).json({
@@ -11,7 +11,7 @@ function identityVerify(req,res,next){
         })
     }
 
-     let decoded;
+     let decoded=null;
 
     try{
 

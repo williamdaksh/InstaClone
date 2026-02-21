@@ -1,15 +1,18 @@
-import {Routes,Route} from 'react-router-dom'
-import Login from './feauters/pages/Login'
-import SignUp from './feauters/pages/SignUp'
+import AppRoutes from "./AppRoutes";
+import { AuthProvider } from "./feauters/auth.context";
+
 const App = () => {
-  return (
-  
-    <Routes>
-      <Route path='/login' element={<Login/>}/>
-      <Route path='/register' element={<SignUp/>}/>
-    </Routes>
 
-  )
-}
+console.log("app")
 
-export default App
+    return (
+        <AuthProvider>
+            <AppRoutes />
+        </AuthProvider>
+      
+        
+    );
+};
+
+export default App;
+
