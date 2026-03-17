@@ -6,24 +6,21 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const { handleLogin, loading } = useAuth();
-    const navigate = useNavigate()
+    const { loading, handleLogin } = useAuth();
 
-    if(loading){
-        return(
-            <h1>Loading.....</h1>
-        )
-    }
+    const navigate = useNavigate()
 
     async function submitHandler(e) {
         e.preventDefault();
 
-         const res =  await  handleLogin(email,password)
+        const res = await handleLogin(email, password);
 
-               console.log(res)
+        console.log(res);
 
-          navigate('/')
-
+        navigate("/");
+    }
+    if (loading) {
+        return <h1>loading......</h1>;
     }
 
     return (

@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema({
     userID:String,
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"users",
+        ref:"user",  // user show kar raha h ki wo kis collection se hai
         required:[false,"userid required for creating the post"]
     },
     imgUrl:{

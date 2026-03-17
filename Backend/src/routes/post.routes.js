@@ -11,6 +11,14 @@ postRouter.post('/',upload.single('photo'),identityVerify,postController.createP
 postRouter.get('/',identityVerify,postController.getPostImage)
 postRouter.get('/details/:postId',identityVerify,postController.getPostDetail)
 
+//api/post/like/:postId
+
+postRouter.post('/like/:postId',identityVerify,postController.likePost)
+
+// show all images
+
+postRouter.get('/feed',identityVerify,postController.feedPostDetails)
+
 
 module.exports = postRouter;
 

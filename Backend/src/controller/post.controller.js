@@ -2,6 +2,7 @@ const postModel = require("../models/post.model");
 const jwt = require("jsonwebtoken");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
+const likeModel = require("../models/like.model");
 
 const imagekit = new ImageKit({
   privateKey: process.env.ImageKit_PrivateKey,
@@ -14,11 +15,10 @@ async function createPost(req, res) {
     const file = await imagekit.files.upload({
       file: await toFile(Buffer.from(req.file.buffer), "file"),
       fileName: req.file.originalname,
-      folder: "insta  post",
+      folder: "insta_post",
     });
 
     console.log("url", file.url, "caption", req.body.caption);
-    res.send(file);
 
     const post = await postModel.create({
       imgUrl: file.url,
@@ -31,7 +31,7 @@ async function createPost(req, res) {
       post,
     });
   } catch (err) {
-    console.log("this error is create post function =>     ", err);
+    console.log("this error is create post function in post controller =>     ", err);
   }
 }
 
@@ -77,8 +77,41 @@ async function getPostDetail(req, res) {
   });
 }
 
+async function feedPostDetails(req,res){
+    const post = await postModel.find().populate("user")
+
+    res.send(post)
+}
+
+async function likePost(req,res){
+
+    const username = req.user.username;
+    const postId = req.params.postId
+
+    const post = await postModel.findById({postId})
+
+    if(!post){
+        res.status(404).json({
+            message:"post not found"
+        })
+    }
+
+    const like = await likeModel.create({
+        post:postId,
+        user:username
+    })
+
+    res.status(200).json({
+        message:"post like successfully",
+        like
+    })
+
+}
+
 module.exports = {
   createPost,
   getPostImage,
-  getPostDetail
+  getPostDetail,
+  feedPostDetails,
+  likePost
 };
